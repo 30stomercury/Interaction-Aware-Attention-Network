@@ -17,6 +17,6 @@ numpy			 1.15.3
 ## Code:
 + data.py: batch generator, each training point is a tripple of (current utt of target speaker, previous utt of target speaker, previous utt of interlocutor) and the label of current utt.
   - mode: context (refers to proposed transactional contexts)
-  - mode: random (refer to baseline randIAAN)
+  - mode: random (refers to baseline randIAAN)
 + model.py: main codes, BiGRU with interation-aware attention. The defined transactional contexts (previous utts)  are encoded into h_p & h_r with GRU+attention.
 
