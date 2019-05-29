@@ -15,9 +15,11 @@ scikit-learn             0.19.1
 numpy			 1.15.3
 ```
 ## Code:
-+ data.py: batch generator, each training point is a tripple of (current utt of target speaker, previous utt of target speaker, previous utt of interlocutor) and the label of current utt.
-  - interaction_data_generator(): generate dataframe under some modes.
-  - mode: context (refers to proposed transactional contexts)
-  - mode: random (refers to baseline randIAAN)
++ data.py: Includes batch generator & data generator, each training point is a tripple of (current utt of target speaker, previous utt of target speaker, previous utt of interlocutor) and the label of current utt.
+  1. interaction_data_generator(): generate data (emo_train.csv & emo_test.csv) under specific modes.
+  - mode: context (refer to proposed transactional contexts)
+  - mode: random (refer to baseline randIAAN)
+  2. interaction_data_generator(): batch generator.
+
 + model.py: main codes, BiGRU with interation-aware attention. The defined transactional contexts (previous utts)  are encoded into h_p & h_r with GRU+attention.
 
