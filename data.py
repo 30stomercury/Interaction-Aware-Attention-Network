@@ -1,14 +1,12 @@
 import numpy as np
 import pandas as pd
 import random
-from random import shuffle
-from random import randint
 import joblib
+from random import shuffle
 from glob import glob
 import tensorflow as tf
-from hyparams import hparams as hp
-import time
 from sklearn import preprocessing
+from hyparams import hparams as hp
 
 ### pooling input sequence ###
 def mean_pool(dic, step=5, max_step=2500):
