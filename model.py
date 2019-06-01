@@ -138,10 +138,6 @@ class model:
         labels=tf.argmax(self.gt_emo, axis=1),
         predictions=self.e_prediction)
 
-    emo_loss_summary = tf.summary.scalar("Emo_loss", self.emo_loss)
-    e_loss_summary = tf.summary.scalar("Emo_total_loss", self.e_loss)
-    e_acc_summary = tf.summary.scalar("Emo_acc", self.e_accuracy)
-    self.merged_emo = tf.summary.merge([emo_loss_summary, e_loss_summary, e_acc_summary])
     # Initialzation
     self.saver = tf.train.Saver(max_to_keep=2000)
     self.sess.run(tf.global_variables_initializer())
@@ -151,6 +147,7 @@ class model:
     total_acc = 0
     total_uar = 0
     Epoch = 1
+    uar_list = []
     # start training
     for index in range(hp.num_train_steps):
       if index == 0:
@@ -177,24 +174,26 @@ class model:
       pred_batch = self.sess.run(self.e_prediction, feed_dict=fd)
       uar_batch = recall_score(groundtruths, pred_batch, average='macro')
       # loss & acc
-      loss_batch, _, acc_batch, summary = self.sess.run([self.e_loss, self.e_optimizer, self.e_accuracy, self.merged_emo], feed_dict=fd)  
+      loss_batch, _, acc_batch = self.sess.run([self.e_loss, self.e_optimizer, self.e_accuracy], feed_dict=fd)  
       total_loss += loss_batch
       total_acc += acc_batch
       total_uar += uar_batch
 
-      if (index + 1) % 10 == 0:
+      if (index + 1) % 20 == 0:
         print('step: {}, Ave emo loss : {:.3f}, Ave emo train acc: {:.3f}, Ave emo train uar: {:.3f}'.format(index+1,
-                                                                                                              total_loss/10,
-                                                                                                              total_acc/10, 
-                                                                                                              total_uar/10,))
-        # add summary
+                                                                                                              total_loss/20,
+                                                                                                              total_acc/20, 
+                                                                                                              total_uar/20,))
         total_loss = 0.0
         total_acc = 0.0
         total_uar = 0.0
         self.save(index)
 
       if (index + 1) % 100 == 0:
-        self.testing()
+        test_gt, test_pred  = self.testing()
+        uar_list.append(float(recall_score(test_gt, test_pred, average='macro')))
+
+    print('optimal step: {}, optimal uar: {}'.format(np.argmax(uar_list)+1*100, max(uar_list)))
 
   def testing(self):
     self.is_training = False
@@ -230,6 +229,8 @@ class model:
     self.is_training = True
     hp.keep_proba = keep_proba
     print('Ave test acc: {:.3f}, Ave test uar: {:.3f}'.format(ave_acc, ave_uar))   
+    return test_gt, test_pred
+
 
   def _get_emo_iter(self):
     # initialize iterator
@@ -245,6 +246,8 @@ class model:
     self.sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))    
     
   def save(self, e):
+    if not os.path.exists(hp.model_path_save):
+      os.makedirs(hp.model_path_save)
     self.saver.save(self.sess, hp.model_path_save+'/model_%d.ckpt' % (e + 1))
 
   def restore(self, e):
