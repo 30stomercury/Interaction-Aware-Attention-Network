@@ -26,3 +26,5 @@ Includes batch generator & data generator, each training point is a tripple of (
 main codes.
 
 + **hyparams.py:** hyperparameters.
+
++ **script_train.py/script_test.py:** training/testing script.
