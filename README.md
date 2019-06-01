@@ -23,5 +23,6 @@ Includes batch generator & data generator, each training point is a tripple of (
     2. interaction_data_generator(): batch generator.
 
 + model.py: 
-main codes, BiGRU with interation-aware attention. The defined transactional contexts (previous utts)  are encoded into h_p & h_r with GRU+attention.
+main codes.
 
++ hyparams.py: hyperparameters.
