@@ -29,5 +29,9 @@ main codes.
 
 + **script_train.py/script_test.py:** training/testing script. To evaluate under realistic scenearios of our model, we adopt leave-onesession-out cross validation.
 
+## Run:
++ `python3 script_train.py` for training.
++ `python3 script_test.py` for testing, please specify the checkpoint (ckpt) for each session in line 6.
+
 ## Docker image
 Coming soon.
