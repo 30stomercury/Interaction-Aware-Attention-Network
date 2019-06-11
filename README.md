@@ -27,7 +27,7 @@ main codes.
 
 + **hyparams.py:** hyperparameters.
 
-+ **script_train.py/script_test.py:** training/testing script.
++ **script_train.py/script_test.py:** training/testing script. To evaluate under realistic scenearios of our model, we adopt leave-onesession-out cross validation.
 
 ## Docker image
 Coming soon.
