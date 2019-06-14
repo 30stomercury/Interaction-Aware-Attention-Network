@@ -3,9 +3,8 @@ import numpy as np
 from hyparams import hparams as hp
 
 def attention_layer(inputs, attention_size=hp.ATTEN_SIZE):
-    # parameters
-    #batch_size = int(inputs.shape[0])
-    hidden_size = int(inputs.shape[-1])  # hidden size of the RNN layer
+    # hidden size of the RNN layer
+    hidden_size = int(inputs.shape[-1])  
     # Trainable parameters
     W = tf.Variable(tf.random_normal([hidden_size, attention_size], stddev=0.1))
     b = tf.Variable(tf.random_normal([attention_size], stddev=0.1))
@@ -21,9 +20,8 @@ def attention_layer(inputs, attention_size=hp.ATTEN_SIZE):
 
 def additive_attention(inputs1, inputs2, attention_size=hp.ATTEN_SIZE, reuse=tf.AUTO_REUSE):
     with tf.variable_scope("additive_attention", reuse=reuse):
-        # parameters
-        #batch_size = int(inputs.shape[0])
-        hidden_size = int(inputs1.shape[-1])  # hidden size of the RNN layer
+        # hidden size of the RNN layer
+        hidden_size = int(inputs1.shape[-1])  
         # Trainable parameters
         W1 = tf.Variable(tf.random_normal([hidden_size, attention_size], stddev=0.1))
         W2 = tf.Variable(tf.random_normal([hidden_size, attention_size], stddev=0.1))
@@ -39,9 +37,8 @@ def additive_attention(inputs1, inputs2, attention_size=hp.ATTEN_SIZE, reuse=tf.
         return outputs
 
 def self_attention(inputs, attention_size=hp.ATTEN_SIZE):
-    # parameters
-    #batch_size = int(inputs.shape[0])
-    hidden_size = int(inputs.shape[-1])  # hidden size of the RNN layer
+    # hidden size of the RNN layer
+    hidden_size = int(inputs.shape[-1])  
     # Trainable parameters
     W = tf.Variable(tf.random_normal([hidden_size, attention_size], stddev=0.1))
     b = tf.Variable(tf.random_normal([attention_size], stddev=0.1))
@@ -69,9 +66,7 @@ def scaled_dot_product_attention(queries, keys, values,
     '''
     with tf.variable_scope("scaled_dot_prodoct", reuse=reuse):
         # d_q = d_k
-        #input_size_k  = keys.get_shape().as_list[-1] 
         input_size_k = keys.shape[-1]
-        #input_size_q = queries.get_shape().as_list[-1] 
         input_size_q = input_size_k
         input_size_v = values.shape[-1]
         # input_size_q = d_model
