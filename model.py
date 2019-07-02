@@ -193,7 +193,7 @@ class model:
         test_gt, test_pred  = self.testing()
         uar_list.append(float(recall_score(test_gt, test_pred, average='macro')))
 
-    print('optimal step: {}, optimal uar: {}'.format(np.argmax(uar_list)+1*100, max(uar_list)))
+    print('optimal step: {}, optimal uar: {}'.format((np.argmax(uar_list)+1)*100, max(uar_list)))
 
   def testing(self):
     self.is_training = False
