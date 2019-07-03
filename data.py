@@ -9,7 +9,7 @@ from sklearn import preprocessing
 from hyparams import hparams as hp
 
 ### pooling input sequence ###
-def mean_pool(dic, step=5, max_step=2500):
+def mean_pool(dic, dim=hp.IN_DIM, step=5, max_step=2500):
     new_dic = {}
     dic_ = dic
     l = list(dic_.keys())
@@ -18,8 +18,8 @@ def mean_pool(dic, step=5, max_step=2500):
             dic_[l_] = dic_[l_][:max_step]
         if len(dic_[l_]) % step != 0:
             for i in range(5-(len(dic_[l_]) % step)):
-                dic_[l_] = np.vstack([dic_[l_], np.zeros(45)])
-        a = np.zeros([len(dic_[l_])//step, 45])
+                dic_[l_] = np.vstack([dic_[l_], np.zeros(dim)])
+        a = np.zeros([len(dic_[l_])//step, dim])
         for i in range(len(dic_[l_])//step):
             a[i] = np.mean(np.split(dic_[l_], len(dic_[l_])/step)[i], 0)
         new_dic[l_] = a
@@ -116,82 +116,6 @@ def generate_random_sample(index_words, seq_dict, emo_dict, seqlength=hp.seqleng
 
     return center_, target_, opposite_, center_label, target_label, opposite_label, target_dist, opposite_dist
 
-def generate_lastlast_sample(index_words, seq_dict, emo_dict, seqlength=hp.seqlength):
-    emo = ['ang', 'hap', 'neu', 'sad']
-    center_, target_, opposite_ = [], [], []
-    center_label, target_label, opposite_label = [], [], []
-    target_dist = []
-    opposite_dist = []
-    for index, center in enumerate(index_words):
-        if emo_dict[center] in emo:
-            center_.append(center)
-            center_label.append(emo_dict[center])
-            pt = []
-            pp = []
-            for word in index_words[max(0, index - 15): index]:
-                if word[-4] == center[-4]:
-                    pt.append(word)
-                else:
-                    pp.append(word)
-
-            if len(pt) >= 2:
-                target_.append(pt[-2])
-                target_label.append(emo_dict[pt[-2]])
-                target_dist.append(index - index_words.index(pt[-2]))
-            else:
-                target_.append('pad')
-                target_label.append('pad')
-                target_dist.append('None')
-
-            if len(pp) >= 2:
-                opposite_.append(pp[-2])
-                opposite_label.append(emo_dict[pp[-2]])
-                opposite_dist.append(index - index_words.index(pp[-2]))
-            else:
-                opposite_.append('pad')
-                opposite_label.append('pad')
-                opposite_dist.append('None')
-
-    return center_, target_, opposite_, center_label, target_label, opposite_label, target_dist, opposite_dist
-
-def generate_lastlastlast_sample(index_words, seq_dict, emo_dict, seqlength=hp.seqlength):
-    emo = ['ang', 'hap', 'neu', 'sad']
-    center_, target_, opposite_ = [], [], []
-    center_label, target_label, opposite_label = [], [], []
-    target_dist = []
-    opposite_dist = []
-    for index, center in enumerate(index_words):
-        if emo_dict[center] in emo:
-            center_.append(center)
-            center_label.append(emo_dict[center])
-            pt = []
-            pp = []
-            for word in index_words[max(0, index - 15): index]:
-                if word[-4] == center[-4]:
-                    pt.append(word)
-                else:
-                    pp.append(word)
-
-            if len(pt) >= 3:
-                target_.append(pt[-3])
-                target_label.append(emo_dict[pt[-3]])
-                target_dist.append(index - index_words.index(pt[-3]))
-            else:
-                target_.append('pad')
-                target_label.append('pad')
-                target_dist.append('None')
-
-            if len(pp) >= 3:
-                opposite_.append(pp[-3])
-                opposite_label.append(emo_dict[pp[-3]])
-                opposite_dist.append(index - index_words.index(pp[-3]))
-            else:
-                opposite_.append('pad')
-                opposite_label.append('pad')
-                opposite_dist.append('None')
-
-    return center_, target_, opposite_, center_label, target_label, opposite_label, target_dist, opposite_dist
-
 
 def generate_interaction_data(dialog_dict, seq_dict, emo_dict, val_set=hp.val_set, mode='context'):
     center_train, target_train, opposite_train, center_label_train, target_label_train, opposite_label_train, target_dist_train, opposite_dist_train = [], [], [], [], [], [], [], []
@@ -200,10 +124,6 @@ def generate_interaction_data(dialog_dict, seq_dict, emo_dict, val_set=hp.val_se
         generator = generate_interaction_sample
     elif mode == 'random':
         generator = generate_random_sample
-    elif mode == 'lastlast':
-        generator = generate_lastlast_sample
-    elif mode == 'lastlastlast':
-        generator = generate_lastlastlast_sample
 
     for k in dialog_dict.keys():
         dialog_order = dialog_dict[k]
@@ -273,54 +193,31 @@ class interaction_data_generator:
 
 
   def generate_sample(self):
-    if self.mode == 'bucketing':
-        for l, sl in zip(self.lst, self.seq_len):
-            c_ = self.seq_dict[self.center[l]]
-            p_ = self.seq_dict[self.target[l]]
-            o_ = self.seq_dict[self.opposite[l]]
-            l_ = self.label[l]
-            if self.latency != 1.0:
-                c_ = c_[:int(self.latency*len(c_))]
-            xs = [np.zeros(hp.IN_DIM, dtype=np.float32)
-                         for _ in range(self.seqlength)]  # center inputs
-            ps = [np.zeros(hp.IN_DIM, dtype=np.float32)
-                         for _ in range(self.seqlength)]  # target inputs
-            os = [np.zeros(hp.IN_DIM, dtype=np.float32)
-                         for _ in range(self.seqlength)]  # target inputs
-            for i in range(len(c_)):
-                xs[i] = c_[i]
-            for i in range(len(p_)):
-                ps[i] = p_[i]
-            for i in range(len(o_)):
-                os[i] = o_[i]        
+    for l, sl in zip(self.lst, self.seq_len):
+        c_ = self.seq_dict[self.center[l]]
+        p_ = self.seq_dict[self.target[l]]
+        o_ = self.seq_dict[self.opposite[l]]
+        l_ = self.label[l]
+        if self.latency != 1.0:
+            c_ = c_[:int(self.latency*len(c_))]
+        xs = [np.zeros(hp.IN_DIM, dtype=np.float32)
+                     for _ in range(self.seqlength)]  # center inputs
+        ps = [np.zeros(hp.IN_DIM, dtype=np.float32)
+                     for _ in range(self.seqlength)]  # target inputs
+        os = [np.zeros(hp.IN_DIM, dtype=np.float32)
+                     for _ in range(self.seqlength)]  # target inputs
+        for i in range(len(c_)):
+            xs[i] = c_[i]
+        for i in range(len(p_)):
+            ps[i] = p_[i]
+        for i in range(len(o_)):
+            os[i] = o_[i]        
 
-            yield xs, ps, os, l_, sl
-    else:
-        sl_ = 0
-        for l, sl in zip(self.lst, self.seq_len):
-            c_ = self.seq_dict[self.center[l]]
-            p_ = self.seq_dict[self.target[l]]
-            o_ = self.seq_dict[self.opposite[l]]
-            l_ = self.label[l]
-            #print(len(c_))
-            if self.latency != 1.0:
-                c_ = c_[:int(self.latency*len(c_))]
-            #print(len(c_))
-            xs = [np.zeros(hp.IN_DIM, dtype=np.float32)
-                         for _ in range(self.seqlength)]  # center inputs
-            ps = [np.zeros(hp.IN_DIM, dtype=np.float32)
-                         for _ in range(self.seqlength)]  # target inputs
-            os = [np.zeros(hp.IN_DIM, dtype=np.float32)
-                         for _ in range(self.seqlength)]  # target inputs
-            for i in range(len(c_)):
-                xs[i] = c_[i]
-            for i in range(len(p_)):
-                ps[i] = p_[i]
-            for i in range(len(o_)):
-                os[i] = o_[i]    
-            if sl > sl_:
-                sl_ = sl
-            yield xs, ps, os, l_, sl
+        if self.mode != 'bucketing' and sl > 0:
+            sl_ = sl
+
+        yield xs, ps, os, l_, sl
+
             
   def get_batch(self):
     while True:
@@ -339,23 +236,20 @@ class interaction_data_generator:
     last_batch = num_test % self.batch_size
     for step in range(num_test_steps):
         if step != num_test_steps -1:
-            center_batch = np.zeros([self.batch_size, self.seqlength, hp.IN_DIM], dtype=np.float32)
-            target_batch = np.zeros([self.batch_size, self.seqlength, hp.IN_DIM], dtype=np.float32)
-            opposite_batch = np.zeros([self.batch_size, self.seqlength, hp.IN_DIM], dtype=np.float32)
-            y_batch = np.zeros([self.batch_size])
-            for index in range(self.batch_size):
-                center_batch[index], target_batch[index], opposite_batch[index], y_batch[index], sl = next(self.single_gen)
+            bs = self.batch_size
         else:
-            center_batch = np.zeros([last_batch, self.seqlength, hp.IN_DIM], dtype=np.float32)
-            target_batch = np.zeros([last_batch, self.seqlength, hp.IN_DIM], dtype=np.float32)
-            opposite_batch = np.zeros([last_batch, self.seqlength, hp.IN_DIM], dtype=np.float32)
-            y_batch = np.zeros([last_batch])
-            for index in range(last_batch):
-                center_batch[index], target_batch[index], opposite_batch[index], y_batch[index], sl = next(self.single_gen)
+            bs = last_batch
+        center_batch = np.zeros([bs, self.seqlength, hp.IN_DIM], dtype=np.float32)
+        target_batch = np.zeros([bs, self.seqlength, hp.IN_DIM], dtype=np.float32)
+        opposite_batch = np.zeros([bs, self.seqlength, hp.IN_DIM], dtype=np.float32)
+        y_batch = np.zeros([bs])
+        for index in range(bs):
+            center_batch[index], target_batch[index], opposite_batch[index], y_batch[index], sl = next(self.single_gen)
 
         yield center_batch[:, :sl, :], target_batch[:, :sl, :], opposite_batch[:, :sl, :], y_batch
 
-### load dictionary ###
+
+#if __name__ == "__main__":
 # dialog order
 dialog_dict = joblib.load('./data/dialog.pkl')
 # feature set
