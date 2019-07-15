@@ -21,25 +21,25 @@ class model:
 
     with tf.variable_scope('intput'):
       # current utt: Uc
-      self.centers = tf.placeholder(dtype=tf.float32, shape=[None, None, hp.IN_DIM])
+      self.current_utt = tf.placeholder(dtype=tf.float32, shape=[None, None, hp.IN_DIM])
       # previous utt of target speaker: Up
-      self.targets = tf.placeholder(dtype=tf.float32, shape=[None, None, hp.IN_DIM])
+      self.target_utt = tf.placeholder(dtype=tf.float32, shape=[None, None, hp.IN_DIM])
       # previous utt of opposite speaker: Ur
-      self.opposites = tf.placeholder(dtype=tf.float32, shape=[None, None, hp.IN_DIM])
+      self.opposite_utt = tf.placeholder(dtype=tf.float32, shape=[None, None, hp.IN_DIM])
       # gt
       self.groundtruths = tf.placeholder(dtype=tf.int64, shape=[None])
 
     with tf.variable_scope('UpEncoder', reuse=tf.AUTO_REUSE):
       cell = tf.contrib.rnn.GRUCell(hp.SEQ_DIM*2)
       outputs, _ = tf.nn.dynamic_rnn(cell, 
-                                     inputs=self.targets, 
+                                     inputs=self.target_utt, 
                                      dtype=tf.float32) 
       self.h_p = self_attention(outputs)
 
     with tf.variable_scope('UrEncoder', reuse=tf.AUTO_REUSE):
       cell = tf.contrib.rnn.GRUCell(hp.SEQ_DIM*2)
       outputs, _ = tf.nn.dynamic_rnn(cell, 
-                                     inputs=self.opposites, 
+                                     inputs=self.opposite_utt, 
                                      dtype=tf.float32) 
       self.h_r = self_attention(outputs)
 
@@ -69,13 +69,13 @@ class model:
       #initial_state = LSTMCell.zero_state(self.hp.BATCH_SIZ, dtype=tf.float32)
       outputs, _ = tf.nn.bidirectional_dynamic_rnn(cell_fw=self.fw_cell,
                                                              cell_bw=self.bw_cell,
-                                                             inputs= self.centers,
+                                                             inputs= self.current_utt,
                                                              dtype=tf.float32,
                                                              time_major=False)
       # hidden units of center utt
       self.c_out = tf.concat(outputs, 2)
       # add masks
-      mask = mask_seq(self.centers)
+      mask = mask_seq(self.current_utt)
       seq_len = tf.shape(self.c_out)[1]
       h_p_ = tf.tile(tf.expand_dims(self.h_p, 1), [1, seq_len, 1])
       h_r_ = tf.tile(tf.expand_dims(self.h_r, 1), [1, seq_len, 1])
@@ -96,7 +96,7 @@ class model:
         v = tf.nn.tanh(tf.tensordot(self.out, W_c, axes=1) + tf.tensordot(h_p_, W_p, axes=1) + tf.tensordot(h_r_, W_r, axes=1) + b)
         vu = tf.tensordot(v, u, axes=1)
         # mask attention weights
-        mask_att = tf.sign(tf.abs(tf.reduce_sum(self.centers, axis=-1))) # [batch_size, sequence_len]
+        mask_att = tf.sign(tf.abs(tf.reduce_sum(self.current_utt, axis=-1))) # [batch_size, sequence_len]
         paddings = tf.ones_like(mask_att)*(-1e8)
         vu = tf.where(tf.equal(mask_att, 0), paddings, vu)               # [batch_size, sequence_len]       
         alphas = tf.nn.softmax(vu)                                       # [batch_size, sequence_len]
@@ -154,19 +154,19 @@ class model:
         print('=========training emotion classification !=========')
 
       try:
-        centers, targets, opposites, groundtruths = next(self.e_train_gen)
+        current_utt, target_utt, opposite_utt, groundtruths = next(self.e_train_gen)
       except StopIteration: 
 	# generator has nothing left to generate
         # initialize iterator again
         print('=========Epoch {} finished !========='.format(Epoch)) 
         Epoch += 1
         self._get_emo_iter()
-        centers, targets, opposites, groundtruths = next(self.e_train_gen)
+        current_utt, target_utt, opposite_utt, groundtruths = next(self.e_train_gen)
 
       fd = {
-            self.centers: centers,
-            self.targets: targets,
-            self.opposites: opposites,
+            self.current_utt: current_utt,
+            self.target_utt: target_utt,
+            self.opposite_utt: opposite_utt,
             self.groundtruths: groundtruths
            }
 
@@ -210,12 +210,12 @@ class model:
     test_gt = []
 
     for i in range(num_test_steps):
-      centers, targets, opposites, groundtruths = next(test_gen)
+      current_utt, target_utt, opposite_utt, groundtruths = next(test_gen)
 
       fd = {
-            self.centers: centers,
-            self.targets: targets,
-            self.opposites: opposites,
+            self.current_utt: current_utt,
+            self.target_utt: target_utt,
+            self.opposite_utt: opposite_utt,
             self.groundtruths: groundtruths
            }
       acc_batch, pred_batch = self.sess.run([self.e_accuracy, self.e_prediction], feed_dict=fd)
@@ -239,6 +239,7 @@ class model:
       self.e_train_gen = e_dat_train.get_batch()
     else:
       e_dat_test = interaction_data_generator(hp.BATCH_SIZE*2, hp.seqlength, seq_dict, hp.emo_test_file, mode='bucketing')
+      #e_dat_test = interaction_data_generator(hp.BATCH_SIZE*2, hp.seqlength, seq_dict, hp.emo_test_file)
       self.e_test_gen = e_dat_test.get_test_batch()
 
   def _get_session(self):
