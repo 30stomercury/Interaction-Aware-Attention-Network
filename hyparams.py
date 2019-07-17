@@ -7,7 +7,6 @@ class hparams:
     keep_proba = 0.9
     weight_decay = 1e-3
     num_train_steps = 2000 # 15000
-    context_window_size = 1
     lr = 1e-4
     emo_train_file = 'emo_train.csv'
     emo_test_file = 'emo_test.csv'
