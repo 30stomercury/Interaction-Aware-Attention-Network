@@ -7,6 +7,7 @@ parser.add_argument('-lr', dest='lr', default=1e-5, type=float)
 parser.add_argument('-keep_proba', dest='keep_proba', default=0.5, type=float)
 parser.add_argument('-seq_dim', dest='seq_dim', default=128, type=int)
 parser.add_argument('-batch_size', dest='batch_size', default=32, type=int)
+args = parser.parse_args()
 
 # cross validation
 val = ['Ses01', 'Ses02', 'Ses03', 'Ses04', 'Ses05']
