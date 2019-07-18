@@ -14,7 +14,7 @@ SMILEconf = '../..../opt/opensmile-2.3.0/config/emobase_v2.conf'
 
 
 # Paths
-audio_folder = glob(args.audio_folder)
+audio_folders = glob(args.audio_folder)
 features_folder = args.features_folder
 
 def extract_iemocap(audio_folder, features_folder):
