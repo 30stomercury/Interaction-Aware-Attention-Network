@@ -22,9 +22,11 @@ data/
 python3 extractSMILE.py -audio_folder wav/ -features_folder extracted_features/
 
 # Select 45-dimensional features and do speaker normalization. 
-python3 preprocess.py -save_folder data/ -features_folder extracted_features/
+python3 preprocess.py -features_folder extracted_features/
 
 ```
+
+# Descriptions
 + feat_all.pkl: (the config file and processing codes are coming soon.)
     - key: speaker ID
     - value: 45 dimensional features extracted by openSMILE.
