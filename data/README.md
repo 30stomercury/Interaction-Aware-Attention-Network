@@ -2,17 +2,18 @@
 
 ## Directory structure
 ```
-wav/
-├── S1
-│   └── wav_mod
-├── S2
-│   └── wav_mod
-├── S3
-│   └── wav_mod
-├── S4
-│   └── wav_mod
-└── S5
-    └── wav_mod
+data/
+└──wav/
+    ├── S1
+    │   └── wav_mod
+    ├── S2
+    │   └── wav_mod
+    ├── S3
+    │   └── wav_mod
+    ├── S4
+    │   └── wav_mod
+    └── S5
+        └── wav_mod
 ```
 
 # Feature extraction pipline
