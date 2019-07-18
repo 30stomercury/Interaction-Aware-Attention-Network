@@ -3,7 +3,7 @@
 ## Directory structure
 ```
 data/
-└──wav/
+└── wav/
     ├── S1
     │   └── wav_mod
     ├── S2
