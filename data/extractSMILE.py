@@ -10,7 +10,7 @@ args = parser.parse_args()
     
 # Modify openSMILE paths HERE:
 SMILEpath = '../../../opt/opensmile-2.3.0/bin/linux_x64_standalone_static/SMILExtract'
-SMILEconf = '../emobase_v2.conf'
+SMILEconf = './emobase_v2.conf'
 
 
 # Paths
