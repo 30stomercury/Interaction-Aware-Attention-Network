@@ -10,16 +10,17 @@ args = parser.parse_args()
     
 # Modify openSMILE paths HERE:
 SMILEpath = '../../../opt/opensmile-2.3.0/bin/linux_x64_standalone_static/SMILExtract'
-SMILEconf = '../..../opt/opensmile-2.3.0/config/emobase_v2.conf'
+SMILEconf = '../emobase_v2.conf'
 
 
 # Paths
-audio_folders = glob(args.audio_folder)
+audio_folders = glob(args.audio_folder+'*')
+print(audio_folders)
 features_folder = args.features_folder
 
 def extract_iemocap(audio_folder, features_folder):
     # Load file list
-    instances = glob(audio_folder+'wav_mod/*')
+    instances = glob(audio_folder+'/wav_mod/*')
     all_files = []
     for i in instances:
         all_files += glob(i+'/*.wav')
