@@ -9,7 +9,6 @@ from argparse import ArgumentParser
 
 # argument
 parser = ArgumentParser()
-parser.add_argument('-save_folder', dest='save_folder', default='data/', type=str)
 parser.add_argument('-features_folder', dest='features_folder', default='extracted_features/', type=str)
 args = parser.parse_args()
 
@@ -46,7 +45,6 @@ def getFeature(File_path):
     return All_Feature
 
 if __name__ == '__main__':
-    save_folder = args.save_folder
     features_folder = args.features_folder
     all_feat = []
     feat_len = []
@@ -92,6 +90,4 @@ if __name__ == '__main__':
     all_feat["pad"] = np.zeros(45)
 
     print("save as .pkl")
-    if not os.path.exists(save_folder):
-        os.mkdir(save_folder)       
-    joblib.dump(all_feat, "{}/feat_all.pkl".format(save_folder))            
+    joblib.dump(all_feat, "feat_all.pkl")            
