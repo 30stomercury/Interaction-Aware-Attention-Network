@@ -9,8 +9,8 @@ parser.add_argument('-features_folder', dest='features_folder', default='extract
 args = parser.parse_args()
     
 # Modify openSMILE paths HERE:
-SMILEpath = '../../opensmile-2.3.0/bin/linux_x64_standalone_static/SMILExtract'
-SMILEconf = '../../opensmile-2.3.0/config/emobase_v2.conf'
+SMILEpath = '../../../opt/opensmile-2.3.0/bin/linux_x64_standalone_static/SMILExtract'
+SMILEconf = '../..../opt/opensmile-2.3.0/config/emobase_v2.conf'
 
 
 # Paths
