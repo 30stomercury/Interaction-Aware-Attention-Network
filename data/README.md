@@ -1,6 +1,6 @@
 # Data Overview
 
-## Directory structure
+## Folder structure
 ```
 data/
 └── wav/
@@ -16,7 +16,7 @@ data/
         └── wav_mod
 ```
 
-# Feature extraction pipline
+## Feature extraction pipline
 ```
 # pull image from dockerhub
 docker pull ff936tw/iaan:v2
@@ -33,7 +33,7 @@ python3 preprocess.py -features_folder extracted_features/
 
 ```
 
-# Descriptions
+## Descriptions
 + feat_all.pkl: (the config file and processing codes are coming soon.)
     - key: speaker ID
     - value: 45 dimensional features extracted by openSMILE.
