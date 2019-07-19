@@ -38,8 +38,8 @@ python3 preprocess.py -features_folder extracted_features/
     - key: speaker ID
     - value: 45 dimensional features extracted by openSMILE.
     
-+ feat_pooled.pkl: (feature pooled every 5 frames)
-    - Run mean_pool() in data.py
++ feat_pooled.pkl: (feature pooled every n frames)
+    - You can run function mean_pool() in data.py, in this paper we set n=5.
     - key: speaker ID
     - value: 45 dimensional features extracted by openSMILE.
 
