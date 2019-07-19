@@ -20,9 +20,11 @@ data/
 ```
 # pull image from dockerhub
 docker pull ff936tw/iaan:v2
+
 # run container
 docker run --runtime=nvidia -v /path/to/wav/folder: \ 
 /workspace/Interaction-aware_Attention_Network/data/wav -it ff936tw/iaan:v2
+
 # extracted audio feature by opensmile toolkit
 python3 extractSMILE.py -audio_folder wav/ -features_folder extracted_features/
 
