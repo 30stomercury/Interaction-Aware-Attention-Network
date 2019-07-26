@@ -200,25 +200,19 @@ class interaction_data_generator:
         l_ = self.label[l]
         if self.latency != 1.0:
             c_ = c_[:int(self.latency*len(c_))]
-        xs = [np.zeros(hp.IN_DIM, dtype=np.float32)
-                     for _ in range(self.seqlength)]  # center inputs
-        ps = [np.zeros(hp.IN_DIM, dtype=np.float32)
-                     for _ in range(self.seqlength)]  # target inputs
-        os = [np.zeros(hp.IN_DIM, dtype=np.float32)
-                     for _ in range(self.seqlength)]  # target inputs
-        for i in range(len(c_)):
-            xs[i] = c_[i]
-        for i in range(len(p_)):
-            ps[i] = p_[i]
-        for i in range(len(o_)):
-            os[i] = o_[i]        
+
+        xs= np.zeros([self.seqlength, hp.IN_DIM])
+        ps = np.zeros([self.seqlength, hp.IN_DIM])                                                                                                                                                                 
+        os = np.zeros([self.seqlength, hp.IN_DIM])
+        xs[:len(c_)] = c_
+        ps[:len(p_)] = p_
+        os[:len(o_)] = o_
 
         if self.mode != 'bucketing' and sl > 0:
             sl_ = sl
 
         yield xs, ps, os, l_, sl
-
-            
+   
   def get_batch(self):
     while True:
         center_batch = np.zeros([self.batch_size, self.seqlength, hp.IN_DIM], dtype=np.float32)
