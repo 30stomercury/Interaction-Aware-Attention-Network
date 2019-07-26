@@ -80,7 +80,7 @@ def scaled_dot_product_attention(queries, keys, values,
         outputs = outputs / (K.get_shape().as_list()[-1] ** 0.5) # devided by sqrt(d_k)
         # mask keys
         key_masks = masking(keys)
-        paddings = tf.ones_like(outputs)*(-1e8)
+        paddings = tf.ones_like(outputs)*(-10e8)
         outputs = tf.where(tf.equal(key_masks, 0), paddings, outputs)# [batch_size, sequence_len_q, sequence_len_k]        
         # Activation
         outputs = tf.nn.softmax(outputs) # [batch_size*h, sequence_len_q, sequence_len_k]          

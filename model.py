@@ -97,7 +97,7 @@ class model:
         vu = tf.tensordot(v, u, axes=1)
         # mask attention weights
         mask_att = tf.sign(tf.abs(tf.reduce_sum(self.current_utt, axis=-1))) # [batch_size, sequence_len]
-        paddings = tf.ones_like(mask_att)*(-1e8)
+        paddings = tf.ones_like(mask_att)*(-10e8)
         vu = tf.where(tf.equal(mask_att, 0), paddings, vu)               # [batch_size, sequence_len]       
         alphas = tf.nn.softmax(vu)                                       # [batch_size, sequence_len]
         # Output reduced with context vector: [batch_size, sequence_len]
