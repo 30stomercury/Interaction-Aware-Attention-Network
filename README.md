@@ -15,19 +15,19 @@ scikit-learn             0.19.1
 numpy			 1.15.3
 ```
 ## Code:
-+ **data.py:** 
+`data.py` 
 Includes batch generator & data generator, each training point is a tripple of (current utt of target speaker, previous utt of target speaker, previous utt of interlocutor) and the label of current utt.
     1. generate_interaction_data(): generate training/testing data (emo_train.csv & emo_test.csv) under specific modes.
-        - `context`: proposed transactional contexts, referred to IAAN.
-        - `random`: randomly sampled contexts, referred to baseline randIAAN.
+        `context`: proposed transactional contexts, referred to IAAN.
+        `random`: randomly sampled contexts, referred to baseline randIAAN.
     2. interaction_data_generator(): batch generator.
 
-+ **model.py:** 
+`model.py` 
 main codes.
 
-+ **hyparams.py:** hyperparameters.
+`hyparams.py` hyperparameters.
 
-+ **script_train.py / script_test.py:** training / testing script. To evaluate under realistic scenarios of our model, we adopt leave-one-session-out cross validation.
+`script_train.py` / `script_test.py` training / testing script. To evaluate under realistic scenarios of our model, we adopt leave-one-session-out cross validation.
 
 ## Run:
 + `python3 script_train.py` for training.
