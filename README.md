@@ -27,11 +27,13 @@ main codes.
 
 `hyparams.py` hyperparameters.
 
-`script_train.py` / `script_test.py` training / testing script. To evaluate under realistic scenarios of our model, we adopt leave-one-session-out cross validation.
+`script_train.py` testing script.
+`script_test.py` training script. 
+To evaluate under realistic scenarios of our model, we adopt leave-one-session-out cross validation.
 
 ## Run:
-+ `python3 script_train.py` for training.
-+ `python3 script_test.py` for testing, please specify the checkpoint (ckpt) for each session in line 6.
++ `python3 script_train.py -lr 0.0001 -batch_size 64 -keep_proba 0.9 -seq_dim 512 -save_path ./model/iaan/ ` for training.
++ `python3 script_test.py -seq_dim 512` for testing, please specify the checkpoint (ckpt) for each session in line 12.
 
 ## Docker image
-Coming soon.
+sudo docker pull ff936tw/iaan:v2
