@@ -32,7 +32,7 @@ main codes.
 To evaluate under realistic scenarios of our model, we adopt leave-one-session-out cross validation.
 
 ## Run:
-+ `python3 script_train.py -lr 0.0001 -batch_size 64 -keep_proba 0.9 -seq_dim 512 -save_path ./model/iaan/ ` for training.
++ `python3 script_train.py -lr 0.0001 -batch_size 64 -keep_proba 0.9 -seq_dim 512 -save_path ./model/iaan/ > out.txt` for training.
 + `python3 script_test.py -seq_dim 512` for testing, please specify the checkpoint (ckpt) for each session in line 12.
 
 ## Docker image
