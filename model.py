@@ -187,9 +187,9 @@ class model:
         total_loss = 0.0
         total_acc = 0.0
         total_uar = 0.0
-        self.save(index)
 
       if (index + 1) % 100 == 0:
+        self.save(index)
         test_gt, test_pred  = self.testing()
         uar_list.append(float(recall_score(test_gt, test_pred, average='macro')))
 
