@@ -72,8 +72,8 @@ if __name__ == '__main__':
             except:
                 print("DATA MISSING!!!! Speaker: {}".format(spk), 'Path: {}'.format(f))
                 continue
-            idx_F0 = np.where(feat_[:,0]==0)[0]
-            feat_ = np.delete(feat_ ,idx_F0 ,axis=0)
+            #idx_F0 = np.where(feat_[:,0]==0)[0]
+            #feat_ = np.delete(feat_ ,idx_F0 ,axis=0)
             try:
                 feat = np.concatenate([feat, feat_])
             except:
