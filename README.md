@@ -22,8 +22,8 @@ numpy			 1.15.3
     + random: randomly sampled contexts, referred to baseline randIAAN.
 + `interaction_data_generator()`: batch generator.
 
-`model.py` &emsp;&emsp;&emsp;main codes.  
-`hyparams.py`   hyperparameters.  
+`model.py` &emsp;&emsp;&emsp;&emsp;&emsp;main codes.  
+`hyparams.py` &emsp;&emsp;hyperparameters.  
 `script_train.py`   testing script.  
 `script_test.py`    training script.  
 To evaluate under realistic scenarios of our model, we adopt leave-one-session-out cross validation.
