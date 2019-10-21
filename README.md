@@ -18,7 +18,8 @@ numpy			 1.15.3
 `data.py` 
 Includes batch generator & data generator, each training point is a tripple of (current utt of target speaker, previous utt of target speaker, previous utt of interlocutor) and the label of current utt.
 + generate_interaction_data(): generate training/testing data (emo_train.csv & emo_test.csv) under specific modes.
-        `context`: proposed transactional contexts, referred to IAAN.
+        `context`: proposed transactional contexts, referred to IAAN.  
+
         `random`: randomly sampled contexts, referred to baseline randIAAN.
 + interaction_data_generator(): batch generator.
 
@@ -27,8 +28,10 @@ main codes.
 
 `hyparams.py` hyperparameters.
 
-`script_train.py` testing script.
+`script_train.py` testing script.  
+
 `script_test.py` training script. 
+
 To evaluate under realistic scenarios of our model, we adopt leave-one-session-out cross validation.
 
 ## Run:
