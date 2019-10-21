@@ -30,13 +30,13 @@ To evaluate under realistic scenarios of our model, we adopt leave-one-session-o
 
 ## Run:
 For training:  
-`python3 script_train.py -lr 0.0001 \
-                         -batch_size 64 \
-                         -keep_proba 0.9 \
-                         -seq_dim 512 \
-                         -save_path ./model/iaan/ > out.txt`
+`python3 script_train.py -lr 0.0001 \  
+                         -batch_size 64 \ 
+                         -keep_proba 0.9 \ 
+                         -seq_dim 512 \ 
+                         -save_path ./model/iaan/ > out.txt` 
 For testing, please specify the checkpoint (ckpt) for each session in line 12: 
-+ `python3 script_test.py -seq_dim 512` 
+`python3 script_test.py -seq_dim 512` 
 
 ## Docker image
 sudo docker pull ff936tw/iaan:v2
