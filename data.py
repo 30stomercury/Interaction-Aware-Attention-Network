@@ -117,7 +117,16 @@ def generate_random_sample(index_words, seq_dict, emo_dict, seqlength=hp.seqleng
     return center_, target_, opposite_, center_label, target_label, opposite_label, target_dist, opposite_dist
 
 
+############################################################ main functions ###########################################################
+
 def generate_interaction_data(dialog_dict, seq_dict, emo_dict, val_set=hp.val_set, mode='context'):
+    """Generate training/testing data (emo_train.csv & emo_test.csv) under specific modes.
+    
+    Args:
+        mode:
+            if mode == context: proposed transactional contexts, referred to IAAN.
+            if mode == random: randomly sampled contexts, referred to baseline randIAAN.
+    """
     center_train, target_train, opposite_train, center_label_train, target_label_train, opposite_label_train, target_dist_train, opposite_dist_train = [], [], [], [], [], [], [], []
     center_val, target_val, opposite_val, center_label_val, target_label_val, opposite_label_val, target_dist_val, opposite_dist_val = [], [], [], [], [], [], [], []
     if mode=='context':
@@ -166,6 +175,10 @@ def generate_interaction_data(dialog_dict, seq_dict, emo_dict, val_set=hp.val_se
     df[column_order].to_csv(val_filename, sep=',', index = False)
 
 class interaction_data_generator:
+  """
+    Batch generator. 
+    Each training point is a tripple of (current utt of target speaker, previous utt of target speaker, previous utt of interlocutor) and the label of current utt.
+  """
   def __init__(self, batch_size, seqlength, seq_dict, file_path, latency=1.0, mode=None):
     df = pd.read_csv(file_path)
     self.center = df['center']
