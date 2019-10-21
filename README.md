@@ -22,7 +22,7 @@ numpy			 1.15.3
     + random: randomly sampled contexts, referred to baseline randIAAN.
 + `interaction_data_generator()`: batch generator.
 
-`model.py` &emsp;main codes.  
+`model.py` &emsp;&emsp;&emsp;main codes.  
 `hyparams.py`   hyperparameters.  
 `script_train.py`   testing script.  
 `script_test.py`    training script.  
