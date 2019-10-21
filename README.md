@@ -1,6 +1,9 @@
 # Interaction-aware Attention Network
 + A tensorflow implementation of Interaction-aware Attention Network in [An Interaction-aware Attention Network for Speech Emotion Recognition in Spoken Dialogs](https://ieeexplore.ieee.org/document/8683293/references#references).
 
+## Model Overview
+<img width="934" alt="Screen Shot 2019-10-21 at 5 11 24 PM" src="https://user-images.githubusercontent.com/14361791/67192274-de2d7880-f425-11e9-9bf5-d85b62cfd621.png">
+
 ## Data:
 Data disciptions of IEMOCAP please refer to [here](https://sail.usc.edu/iemocap/).
 
