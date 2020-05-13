@@ -1,12 +1,13 @@
 class hparams:
-    seqlength = 500     # Maximum sequence length (sequences longer than this are dropped)
-    IN_DIM = 45         # Feature dimension of eGemaps
-    SEQ_DIM = 256
-    BATCH_SIZE = 64
+    seqlength = 855     # Maximum sequence length (sequences longer than this are dropped)
+    IN_DIM = 512        # Feature dimension 
+    SEQ_DIM = 128
+    HIDDEN_DIM = 64
+    BATCH_SIZE = 16
     ATTEN_SIZE = 16
     keep_proba = 0.9
     weight_decay = 1e-3
-    num_train_steps = 2000 # 15000
+    num_train_steps = 3000 
     lr = 1e-4
     emo_train_file = 'emo_train.csv'
     emo_test_file = 'emo_test.csv'

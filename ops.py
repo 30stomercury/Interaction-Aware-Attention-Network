@@ -1,22 +1,8 @@
 import tensorflow as tf
 import numpy as np
 from hyparams import hparams as hp
-
-def attention_layer(inputs, attention_size=hp.ATTEN_SIZE):
-    # hidden size of the RNN layer
-    hidden_size = int(inputs.shape[-1])  
-    # Trainable parameters
-    W = tf.Variable(tf.random_normal([hidden_size, attention_size], stddev=0.1))
-    b = tf.Variable(tf.random_normal([attention_size], stddev=0.1))
-    u = tf.Variable(tf.random_normal([attention_size], stddev=0.1))
-    v = tf.sigmoid(tf.tensordot(inputs, W, axes=1) + b)
-    vu = tf.tensordot(v, u, axes=1)   # (Batch size,T)
-    alphas = tf.nn.softmax(vu)        # (Batch size,T)
-
-    # Output reduced with context vector: (Batch size, hidden_size)
-    outputs = tf.reduce_sum(inputs * tf.expand_dims(alphas, -1), 1)
-    outputs = tf.reshape(outputs, [-1, hidden_size])
-    return outputs
+from ops import *
+from sklearn.metrics import confusion_matrix, recall_score, accuracy_score
 
 def additive_attention(inputs1, inputs2, attention_size=hp.ATTEN_SIZE, reuse=tf.AUTO_REUSE):
     with tf.variable_scope("additive_attention", reuse=reuse):
@@ -46,10 +32,9 @@ def self_attention(inputs, attention_size=hp.ATTEN_SIZE):
     v = tf.nn.tanh(tf.tensordot(inputs, W, axes=1) + b)
     vu = tf.tensordot(v, u, axes=1)   # (Batch size,T)
     alphas = tf.nn.softmax(vu)        # (Batch size,T)
-
-    # Output reduced with context vector: (Batch size, hidden_size)
     outputs = tf.reduce_sum(inputs * tf.expand_dims(alphas, -1), 1)
     outputs = tf.reshape(outputs, [-1, hidden_size])
+
     return outputs
 
 def scaled_dot_product_attention(queries, keys, values, 
@@ -97,14 +82,6 @@ def scaled_dot_product_attention(queries, keys, values,
         outputs = tf.layers.dense(outputs, input_size_q, use_bias=True) # [batch_size, sequence_len_q, d_model].
         return outputs
 
-def reparameterize(mu, log_variance):
-
-  std = tf.exp(0.5 * log_variance)
-  # e ~ N(0,1)
-  epsilon = tf.random_normal(tf.shape(std), stddev=1)
-
-  return (mu + epsilon * std)
-
 def masking(inputs):
     # d_q = d_k
     mask = tf.sign(tf.abs(tf.reduce_sum(inputs, axis=-1))) # [batch_size, sequence_len_k]
@@ -112,13 +89,13 @@ def masking(inputs):
     mask = tf.tile(tf.expand_dims(mask, 1), [1, tf.shape(inputs)[1], 1]) # [batch_size, sequence_len_k, sequence_len_k]  
     return mask 
 
-def mask_seq(inputs):
+def mask_seq(inputs, dim):
     '''
     input: input sequences
     output: masks
     '''
     mask = tf.sign(tf.abs(tf.reduce_sum(inputs, axis=-1))) # [batch_size, sequence_len_k]
-    mask = tf.tile(tf.expand_dims(mask, 1), [1, 2*hp.SEQ_DIM, 1])
+    mask = tf.tile(tf.expand_dims(mask, 1), [1, dim, 1])
     mask = tf.transpose(mask, [0, 2, 1])
     return mask 
 
@@ -159,9 +136,12 @@ def layer_norm(x, keep_proba, is_training=True, reuse=tf.AUTO_REUSE):
         x = tf.contrib.layers.layer_norm(x)
     return x
 
-def feed_forward(x, d_ff=1024, reuse=None):
-    output_dim = x.get_shape()[-1]
-    with tf.variable_scope('feed_forward', reuse=reuse):
-        x = tf.layers.dense(x, d_ff, activation=tf.nn.relu)
-        x = tf.layers.dense(x, output_dim)
-        return x
+def evaluation(groundtruth, prediction):
+
+    ave_uar = recall_score(groundtruth, prediction, average='macro')
+    ave_acc = accuracy_score(groundtruth, prediction)
+    conf = confusion_matrix(groundtruth, prediction)
+    print('Ave test acc: {:.3f}, Ave test uar: {:.3f}'.format(ave_acc, ave_uar))   
+    print(conf)
+    
+    return ave_uar, ave_acc

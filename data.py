@@ -8,8 +8,8 @@ import tensorflow as tf
 from sklearn import preprocessing
 from hyparams import hparams as hp
 
-### pooling input sequence ###
 def mean_pool(dic, dim=hp.IN_DIM, step=5, max_step=2500):
+    """ Pooling input sequence """
     new_dic = {}
     dic_ = dic
     l = list(dic_.keys())
@@ -25,8 +25,8 @@ def mean_pool(dic, dim=hp.IN_DIM, step=5, max_step=2500):
         new_dic[l_] = a
     return new_dic
 
-### generate dialog order from transcripts ###
 def generate_dialog_order():
+    """ Generate dialog order from transcripts. """
     file = [i.replace('\\', '/') for i in glob('./Transcripts/*')]
     dialog = {}
     for f in file:
@@ -51,9 +51,10 @@ def generate_dialog_order():
                 dialog[l.split('/')[-1].split('.')[0]] = dialog_order
     return dialog
 
-### generate interaction training pairs ###
-# total 4 class/ total 5531 emo labels/ total 94 emo label dropped due to lack of previous sentence
 def generate_interaction_sample(index_words, seq_dict, emo_dict, seqlength=hp.seqlength):
+    """ 
+    Generate interaction training pairs,
+    total 4 class, total 5531 emo samples."""
     emo = ['ang', 'hap', 'neu', 'sad']
     center_, target_, opposite_ = [], [], []
     center_label, target_label, opposite_label = [], [], []
@@ -255,13 +256,3 @@ class interaction_data_generator:
 
         yield center_batch[:, :sl, :], target_batch[:, :sl, :], opposite_batch[:, :sl, :], y_batch
 
-
-#if __name__ == "__main__":
-# dialog order
-dialog_dict = joblib.load('./data/dialog.pkl')
-# feature set
-seq_dict = joblib.load('./data/feat_pooled.pkl')
-# labels
-emo_all_dict = joblib.load('./data/emo_all.pkl')
-# generate train/test dataframe
-generate_interaction_data(dialog_dict, seq_dict, emo_all_dict, mode='context')
