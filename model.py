@@ -97,9 +97,9 @@ class model:
         b = tf.Variable(tf.random_normal([attention_size], stddev=0.1))
         u = tf.Variable(tf.random_normal([attention_size], stddev=0.1))
         v = tf.nn.tanh(
-                    tf.tensordot(self.out, W_c, axes=1) + \  # current utt
-                    tf.tensordot(h_p_, W_p, axes=1) + \      # context
-                    tf.tensordot(h_r_, W_r, axes=1) + b)     # context
+                    tf.tensordot(self.out, W_c, axes=1) + \
+                    tf.tensordot(h_p_, W_p, axes=1) + \
+                    tf.tensordot(h_r_, W_r, axes=1) + b)    
         vu = tf.tensordot(v, u, axes=1)
         # mask attention weights
         mask_att = tf.sign(tf.abs(tf.reduce_sum(self.current_utt, axis=-1))) # [batch_size, sequence_len]
