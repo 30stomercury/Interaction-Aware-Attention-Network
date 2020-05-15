@@ -30,6 +30,11 @@ numpy			 1.15.3
 To evaluate under realistic scenarios of our model, we adopt leave-one-session-out cross validation.
 
 ## Run:
+For feature pooling to reduce computational cost:
+```
+python3 pool_feats.py --input_file INPUT_FILE --output_file OUTPUT_FILE --feat_dim FEAT_DIM --step STEP --max_size MAX_SIZE
+```
+
 For training:  
 ```
 python3 script_train.py --seq_dim SEQ_DIM \

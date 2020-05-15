@@ -9,7 +9,16 @@ from sklearn import preprocessing
 from hyparams import hparams as hp
 
 def mean_pool(dic, dim=hp.IN_DIM, step=5, max_step=2500):
-    """ Pooling input sequence """
+    """ Pooling input sequence 
+    args:
+      dic: dictionary, used to store features.
+      dim: int, feature dimension.
+      step: int, pooling every "step" frames.
+      max_step: clip original feature sequence to max step.
+    
+    return:
+      new_dict: dictionary, pooled features.
+    """
     new_dic = {}
     dic_ = dic
     l = list(dic_.keys())
@@ -17,12 +26,12 @@ def mean_pool(dic, dim=hp.IN_DIM, step=5, max_step=2500):
         if len(dic_[l_]) >= max_step:
             dic_[l_] = dic_[l_][:max_step]
         if len(dic_[l_]) % step != 0:
-            for i in range(5-(len(dic_[l_]) % step)):
+            for i in range(step-(len(dic_[l_]) % step)):
                 dic_[l_] = np.vstack([dic_[l_], np.zeros(dim)])
         a = np.zeros([len(dic_[l_])//step, dim])
         for i in range(len(dic_[l_])//step):
             a[i] = np.mean(np.split(dic_[l_], len(dic_[l_])/step)[i], 0)
-        new_dic[l_] = a
+        new_dic[l_] = a.astype(np.float32)
     return new_dic
 
 def generate_dialog_order():
