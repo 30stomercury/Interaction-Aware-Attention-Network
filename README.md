@@ -48,3 +48,15 @@ For testing
 ```
 python3 script_test.py  --result_file outputs/RECORD_FILE.json --feat_dir data/XXX.pkl
 ```
+
+## Citation
+```
+@inproceedings{yeh2019interaction,
+  title={An interaction-aware attention network for speech emotion recognition in spoken dialogs},
+  author={Yeh, Sung-Lin and Lin, Yun-Shao and Lee, Chi-Chun},
+  booktitle={ICASSP 2019-2019 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={6685--6689},
+  year={2019},
+  organization={IEEE}
+}
+```
