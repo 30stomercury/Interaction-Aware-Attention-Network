@@ -19,6 +19,7 @@ parser = ArgumentParser()
 parser.add_argument('--lr', dest='lr', default=1e-4, type=float)
 parser.add_argument('--keep_proba', dest='keep_proba', default=0.9, type=float)
 parser.add_argument('--seq_dim', dest='seq_dim', default=256, type=int)
+parser.add_argument('--in_dim', dest='in_dim', default=45, type=int)
 parser.add_argument('--hidden_dim', dest='hidden_dim', default=64, type=int)
 parser.add_argument('--atten_size', dest='atten_size', default=16, type=int)
 parser.add_argument('--batch_size', dest='batch_size', default=16, type=int)
@@ -35,7 +36,7 @@ results = vars(args)
 # dialog order
 dialog_dict = joblib.load('./data/dialog.pkl')
 # feature set
-asr_dict = joblib.load(args.feat_dir)
+seq_dict = joblib.load(args.feat_dir)
 # labels
 emo_all_dict = joblib.load('./data/emo_all.pkl')
 # generate train/test dataframe
@@ -50,6 +51,7 @@ for val_ in val:
 
     # params
     hp.lr = args.lr
+    hp.IN_DIM = args.in_dim
     hp.SEQ_DIM = args.seq_dim
     hp.ATTEN_SIZE = args.atten_size
     hp.HIDDEN_DIM = args.hidden_dim

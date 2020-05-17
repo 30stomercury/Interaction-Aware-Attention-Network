@@ -1,0 +1,1 @@
+{"lr": 0.0001, "keep_proba": 1.0, "seq_dim": 512, "in_dim": 45, "hidden_dim": 64, "atten_size": 16, "batch_size": 64, "model_dir": "model/iaan/", "feat_dir": "data/feat_pooled.pkl", "record_file": "outputs/iaan.json", "Ses01": 3500, "Ses02": 2800, "Ses03": 2900, "Ses04": 2900, "Ses05": 2700, "uar": 0.6720901373037571, "war": 0.658289640209727}

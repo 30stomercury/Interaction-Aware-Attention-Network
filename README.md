@@ -49,6 +49,12 @@ For testing
 python3 script_test.py  --result_file outputs/RECORD_FILE.json --feat_dir data/XXX.pkl
 ```
 
+I include whole process and hyperparameters in a script:
+```
+sh run.sh
+```
+
+
 ## Citation
 ```
 @inproceedings{yeh2019interaction,
